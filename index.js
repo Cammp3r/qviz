@@ -1,167 +1,117 @@
-(function() {
-  var questions = [{
-    question: "What is 2*5?",
-    choices: [2, 5, 10, 15, 20],
-    correctAnswer: 2
-  }, {
-    question: "What is 3*6?",
-    choices: [3, 6, 9, 12, 18],
-    correctAnswer: 4
-  }, {
-    question: "What is 8*9?",
-    choices: [72, 99, 108, 134, 156],
-    correctAnswer: 0
-  }, {
-    question: "What is 1*7?",
-    choices: [4, 5, 6, 7, 8],
-    correctAnswer: 3
-  }, {
-    question: "What is 8*8?",
-    choices: [20, 30, 40, 50, 64],
-    correctAnswer: 4
-  }];
-  
-  var questionCounter = 0; //Tracks question number
-  var selections = []; //Array containing user choices
-  var quiz = $('#quiz'); //Quiz div object
-  
-  // Display initial question
-  displayNext();
-  
-  // Click handler for the 'next' button
-  $('#next').on('click', function (e) {
-    e.preventDefault();
-    
-    // Suspend click listener during fade animation
-    if(quiz.is(':animated')) {        
-      return false;
+const nextButton = document.getElementById("next_button");
+const questionName = document.getElementById("question_name");
+const option = document.getElementById("option");
+
+const questionNames = [
+    {
+        text: "Делай, как надо. Как...",
+        correct: 0
+    },
+    {
+        text: "Работа - это не волк. Работа - ...",
+        correct: 2
+    },
+    {
+        text: "Не каждый может взвалить на себя груз ответственности, а я ...",
+        correct: 1
+    },
+    {
+        text: "Если обидели- не обижайся, Если ударили ...",
+        correct: 3
     }
-    choose();
-    
-    // If no user selection, progress is stopped
-    if (isNaN(selections[questionCounter])) {
-      alert('Please make a selection!');
-    } else {
-      questionCounter++;
-      displayNext();
-    }
-  });
-  
-  // Click handler for the 'prev' button
-  $('#prev').on('click', function (e) {
-    e.preventDefault();
-    
-    if(quiz.is(':animated')) {
-      return false;
-    }
-    choose();
-    questionCounter--;
-    displayNext();
-  });
-  
-  // Click handler for the 'Start Over' button
-  $('#start').on('click', function (e) {
-    e.preventDefault();
-    
-    if(quiz.is(':animated')) {
-      return false;
-    }
-    questionCounter = 0;
-    selections = [];
-    displayNext();
-    $('#start').hide();
-  });
-  
-  // Animates buttons on hover
-  $('.button').on('mouseenter', function () {
-    $(this).addClass('active');
-  });
-  $('.button').on('mouseleave', function () {
-    $(this).removeClass('active');
-  });
-  
-  // Creates and returns the div that contains the questions and 
-  // the answer selections
-  function createQuestionElement(index) {
-    var qElement = $('<div>', {
-      id: 'question'
+];
+
+const options = [
+{text: "не надо, не делай" },
+{text: "навалил груз на детской площадке"},
+{text: "это ворк"},
+{text: "не ударяйся"}
+]
+
+let currentIndex = 0;
+let selectedIndex = null;
+let score = 0;
+let submitted = false;
+
+function renderQuestion(i) {
+    const q = questionNames[i];
+    questionName.innerText = q.text;
+    option.style.display = "";
+    option.innerHTML = "";
+
+    const answerList = Array.isArray(q.options) && q.options.length ? q.options : options.map(o => o.text);
+
+    answerList.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "answer-button";
+        btn.type = "button";
+        btn.innerText = optText;
+        btn.dataset.index = idx;
+        btn.disabled = false;
+
+        btn.addEventListener("click", () => {
+            if (submitted) return;
+
+            if (selectedIndex === idx) {
+                selectedIndex = null;
+                btn.classList.remove("selected");
+            } else {
+                selectedIndex = idx;
+                Array.from(option.children).forEach(c => c.classList.remove("selected"));
+                btn.classList.add("selected");
+            }
+            nextButton.disabled = selectedIndex === null;
+        });
+
+        option.appendChild(btn);
     });
-    
-    var header = $('<h2>Question ' + (index + 1) + ':</h2>');
-    qElement.append(header);
-    
-    var question = $('<p>').append(questions[index].question);
-    qElement.append(question);
-    
-    var radioButtons = createRadios(index);
-    qElement.append(radioButtons);
-    
-    return qElement;
-  }
-  
-  // Creates a list of the answer choices as radio inputs
-  function createRadios(index) {
-    var radioList = $('<ul>');
-    var item;
-    var input = '';
-    for (var i = 0; i < questions[index].choices.length; i++) {
-      item = $('<li>');
-      input = '<input type="radio" name="answer" value=' + i + ' />';
-      input += questions[index].choices[i];
-      item.append(input);
-      radioList.append(item);
-    }
-    return radioList;
-  }
-  
-  // Reads the user selection and pushes the value to an array
-  function choose() {
-    selections[questionCounter] = +$('input[name="answer"]:checked').val();
-  }
-  
-  // Displays next requested element
-  function displayNext() {
-    quiz.fadeOut(function() {
-      $('#question').remove();
-      
-      if(questionCounter < questions.length){
-        var nextQuestion = createQuestionElement(questionCounter);
-        quiz.append(nextQuestion).fadeIn();
-        if (!(isNaN(selections[questionCounter]))) {
-          $('input[value='+selections[questionCounter]+']').prop('checked', true);
+
+    selectedIndex = null;
+    submitted = false;
+    nextButton.disabled = true;
+    nextButton.innerText = "Проверить";
+    nextButton.style.display = "";
+}
+
+nextButton.addEventListener("click", () => {
+    const q = questionNames[currentIndex];
+    if (nextButton.disabled) return;
+
+    if (!submitted) {
+        const buttons = Array.from(option.children);
+        const correctIdx = q.correct;
+        if (selectedIndex === correctIdx) {
+            buttons[selectedIndex].classList.add("correct");
+            score++;
+        } else {
+            if (selectedIndex !== null) buttons[selectedIndex].classList.add("wrong");
+            if (typeof correctIdx === "number" && buttons[correctIdx]) buttons[correctIdx].classList.add("correct");
         }
-        
-        // Controls display of 'prev' button
-        if(questionCounter === 1){
-          $('#prev').show();
-        } else if(questionCounter === 0){
-          
-          $('#prev').hide();
-          $('#next').show();
+
+        buttons.forEach(b => b.disabled = true);
+        submitted = true;
+
+        if (currentIndex >= questionNames.length - 1) {
+            nextButton.innerText = "Показать результат";
+        } else {
+            nextButton.innerText = "Дальше";
+            nextButton.disabled = false;
         }
-      }else {
-        var scoreElem = displayScore();
-        quiz.append(scoreElem).fadeIn();
-        $('#next').hide();
-        $('#prev').hide();
-        $('#start').show();
-      }
-    });
-  }
-  
-  // Computes score and returns a paragraph element to be displayed
-  function displayScore() {
-    var score = $('<p>',{id: 'question'});
-    
-    var numCorrect = 0;
-    for (var i = 0; i < selections.length; i++) {
-      if (selections[i] === questions[i].correctAnswer) {
-        numCorrect++;
-      }
+        return;
     }
-    
-    score.append('You got ' + numCorrect + ' questions out of ' +
-                 questions.length + ' right!!!');
-    return score;
-  }
-})();
+
+
+    currentIndex++;
+    if (currentIndex >= questionNames.length) {
+        questionName.innerText = `Квиз завершён. Правильных ответов: ${score} из ${questionNames.length}`;
+        option.innerHTML = "";
+        option.style.display = "none";
+        nextButton.style.display = "none";
+        nextButton.disabled = true;
+        return;
+    }
+    renderQuestion(currentIndex);
+});
+
+
+renderQuestion(0);
