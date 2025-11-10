@@ -11,8 +11,14 @@ function saveQuizzes(arr){
   localStorage.setItem(KEY_QUIZZES, JSON.stringify(arr));
 }
 
-function loadResults(){ return JSON.parse(localStorage.getItem(KEY_RESULTS) || '[]'); }
-function saveResults(arr){ localStorage.setItem(KEY_RESULTS, JSON.stringify(arr)); }
+function loadResults(){ 
+  try
+    {return JSON.parse(localStorage.getItem(KEY_RESULTS) || '[]');    
+    }catch(e){ return []; }
+ }
+function saveResults(arr){
+  localStorage.setItem(KEY_RESULTS, JSON.stringify(arr));
+}
 
 function genId(prefix='id'){
   return prefix + '_' + Math.random().toString(36).slice(2,9);
