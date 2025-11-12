@@ -1,4 +1,3 @@
-// Quizzes page logic
 (function(){
   const listEl = document.getElementById('quiz-list');
   const form = document.getElementById('create-form');
@@ -18,7 +17,6 @@
     });
   }
 
-  // attach helpers globally for onclick in markup
   window.startQuiz = function(id){
     location.href = `play.html?id=${id}`;
   };
@@ -53,19 +51,17 @@
       const qtext = qdiv.querySelector('.q-text').value.trim();
       const opts = Array.from(qdiv.querySelectorAll('.opt')).map(i=>i.value.trim());
       const correct = parseInt(qdiv.querySelector('.correct').value||'0',10);
-      if(!qtext || opts.some(o=>!o)){ /* skip invalid */ return; }
+      if(!qtext || opts.some(o=>!o)){ return; }
       qs.push({text:qtext, options:opts, correct: correct});
     });
     const newQuiz = { id: genId('quiz'), title, desc, questions: qs };
     const arr = loadQuizzes(); arr.push(newQuiz); saveQuizzes(arr);
-    // reset form
+
     form.reset(); questionsArea.innerHTML=''; renderList();
   });
 
-  // utility
   function escapeHtml(s){ return s.replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
 
-  // initial
   addQuestionUI();
   renderList();
 })();

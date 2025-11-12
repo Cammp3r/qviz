@@ -1,4 +1,3 @@
-// Play page logic
 (function(){
   const params = new URLSearchParams(location.search);
   const id = params.get('id');
@@ -28,7 +27,6 @@
       ${q.options.map((opt,i)=>`<div class="option ${answers[idx]===i?'selected':''}" data-i="${i}">${escapeHtml(opt)}</div>`).join('')}
     </div>
     <div class="small"> ${idx+1} / ${quiz.questions.length} </div>`;
-    // attach option click
     Array.from(qArea.querySelectorAll('.option')).forEach(el=>{
       el.addEventListener('click', ()=>{
         answers[idx] = parseInt(el.dataset.i,10);
@@ -48,7 +46,7 @@
     for(let i=0;i<quiz.questions.length;i++){
       if(answers[i]===quiz.questions[i].correct) score++;
     }
-    // store result
+
     const all = loadResults();
     all.push({
       id: genId('res'),
@@ -59,7 +57,7 @@
       date: new Date().toISOString()
     });
     saveResults(all);
-    // go to results page
+  
     location.href = `results.html`;
   }
 

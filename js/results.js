@@ -1,4 +1,3 @@
-// Results page
 (function(){
   const el = document.getElementById('results-list');
   const results = loadResults();
