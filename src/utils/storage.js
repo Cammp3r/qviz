@@ -1,4 +1,3 @@
-// ES module version of storage helpers
 export const KEY_QUIZZES = 'neon_quizzes_v1'
 export const KEY_RESULTS = 'neon_quiz_results_v1'
 

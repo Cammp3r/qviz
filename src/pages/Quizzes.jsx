@@ -110,7 +110,13 @@ export default function Quizzes(){
                     <input key={oi} placeholder={`Option ${String.fromCharCode(65+oi)}`} className="opt" required value={opt} onChange={e=>updateOption(qi, oi, e.target.value)} />
                   ))}
                 </div>
-                <label className="small">Correct option index (0-3): <input className="correct" type="number" min="0" max="3" value={q.correct} onChange={e=>updateQuestion(qi, { correct: e.target.value })} /></label>
+                <label className="small">Correct option: 
+                  <select className="correct" value={q.correct} onChange={e=>updateQuestion(qi, { correct: parseInt(e.target.value,10) })}>
+                    {q.options.map((_, oi)=>(
+                      <option key={oi} value={oi}>{String.fromCharCode(65+oi)}</option>
+                    ))}
+                  </select>
+                </label>
               </div>
             ))}
           </div>
