@@ -93,6 +93,39 @@ body{
   gap:10px;
   margin-top:10px;
 }
+.form{
+  max-width:900px;
+}
+.form-questions{
+  margin-top:12px;
+}
+.form .question{
+  background:linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,0.02);
+  padding:12px;
+}
+.form .q-text{
+  font-weight:600;
+  margin-bottom:8px;
+}
+.form .opts{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  margin-bottom:8px;
+}
+.form .opt{
+  padding:10px;
+  background:rgba(255,255,255,0.01);
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,0.02);
+}
+.form .correct{
+  width:64px;
+  margin-left:8px;
+  padding:6px;
+  border-radius:6px;
+}
 .btn{
   background:transparent;
   border:1px solid rgba(255,255,255,0.06);
