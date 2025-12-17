@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { loadQuizzes, loadResults, saveResults, genId } from '../utils/storage'
+import { loadQuizzes, saveResult, genId } from '../utils/storage'
 
 export default function Play(){
   const { id } = useParams()
@@ -10,12 +10,13 @@ export default function Play(){
   const [answers, setAnswers] = useState([])
 
   useEffect(()=>{
-    const quizzes = loadQuizzes()
-    const q = quizzes.find(x=>x.id===id)
-    if(!q){ setQuiz(null); return }
-    setQuiz(q)
-    setAnswers(new Array(q.questions.length).fill(null))
-    setIdx(0)
+    loadQuizzes().then(quizzes=>{
+      const q = quizzes.find(x=>x.id===id)
+      if(!q){ setQuiz(null); return }
+      setQuiz(q)
+      setAnswers(new Array(q.questions.length).fill(null))
+      setIdx(0)
+    })
   }, [id])
 
   if(quiz===null){
@@ -36,15 +37,18 @@ export default function Play(){
   function prev(){ setIdx(i=>Math.max(0,i-1)) }
   function next(){ setIdx(i=>Math.min(quiz.questions.length-1,i+1)) }
 
-  function finishQuiz(){
+  async function finishQuiz(){
     let score = 0
     for(let i=0;i<quiz.questions.length;i++){
       if(answers[i]===quiz.questions[i].correct) score++
     }
-    const all = loadResults()
-    all.push({ id: genId('res'), quizId: quiz.id, quizTitle: quiz.title, score, total: quiz.questions.length, date: new Date().toISOString() })
-    saveResults(all)
-    navigate('/results')
+    const result = { id: genId('res'), quizId: quiz.id, quizTitle: quiz.title, score, total: quiz.questions.length, date: new Date().toISOString() }
+    try{
+      await saveResult(result)
+      navigate('/results')
+    }catch(e){
+      alert('Failed to save result')
+    }
   }
 
   const q = quiz.questions[idx]

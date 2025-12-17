@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { loadQuizzes, saveQuizzes, genId } from '../utils/storage'
+import { loadQuizzes, saveQuiz, deleteQuiz, genId } from '../utils/storage'
 
 function makeEmptyQuestion(){
   return { text: '', options: ['', '', '', ''], correct: 0 }
@@ -15,22 +15,26 @@ export default function Quizzes(){
   const navigate = useNavigate()
 
   useEffect(()=>{
-    setQuizzes(loadQuizzes())
+    loadQuizzes().then(setQuizzes)
   }, [])
 
-  function refresh(){
-    setQuizzes(loadQuizzes())
+  async function refresh(){
+    const data = await loadQuizzes()
+    setQuizzes(data)
   }
 
   function startQuiz(id){
     navigate(`/play/${id}`)
   }
 
-  function deleteQuizConfirm(id){
+  async function deleteQuizConfirm(id){
     if(!confirm('Delete quiz?')) return
-    const arr = loadQuizzes().filter(x=>x.id!==id)
-    saveQuizzes(arr)
-    refresh()
+    try{
+      await deleteQuiz(id)
+      refresh()
+    }catch(e){
+      alert('Failed to delete quiz')
+    }
   }
 
   function addQuestionUI(){
@@ -50,7 +54,7 @@ export default function Quizzes(){
     }))
   }
 
-  function handleSubmit(e){
+  async function handleSubmit(e){
     e.preventDefault()
     const t = title.trim()
     const d = desc.trim()
@@ -64,12 +68,16 @@ export default function Quizzes(){
       qs.push({ text: qtext, options: opts, correct })
     })
     const newQuiz = { id: genId('quiz'), title: t, desc: d, questions: qs }
-    const arr = loadQuizzes(); arr.push(newQuiz); saveQuizzes(arr)
-    // reset
-    setTitle('')
-    setDesc('')
-    setQuestions([ makeEmptyQuestion(), makeEmptyQuestion() ])
-    refresh()
+    try{
+      await saveQuiz(newQuiz)
+      // reset
+      setTitle('')
+      setDesc('')
+      setQuestions([ makeEmptyQuestion(), makeEmptyQuestion() ])
+      refresh()
+    }catch(e){
+      alert('Failed to save quiz')
+    }
   }
 
   return (

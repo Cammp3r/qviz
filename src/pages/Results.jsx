@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { loadResults } from '../utils/storage'
 import { useNavigate } from 'react-router-dom'
 
 export default function Results(){
   const navigate = useNavigate()
-  const results = loadResults()
+  const [results, setResults] = useState([])
+
+  useEffect(()=>{
+    loadResults().then(setResults)
+  }, [])
+
   if(!results.length) return <div className="container"><div className="small">No results yet</div></div>
 
   return (
