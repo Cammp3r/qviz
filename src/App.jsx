@@ -9,10 +9,10 @@ export default function App(){
     <BrowserRouter>
       <div className="app-root">
         <header className="topbar">
-          <h1><Link to="/" style={{textDecoration:'none', color:'inherit'}}>Best quiz</Link></h1>
+          <h1><Link to="/" className="link-plain">Best quiz</Link></h1>
           <nav>
             <Link to="/">Home</Link>
-            <Link to="/results" style={{marginLeft:12}}>Results</Link>
+            <Link to="/results" className="ml-12">Results</Link>
           </nav>
         </header>
         <main>

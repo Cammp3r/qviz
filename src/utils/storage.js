@@ -1,7 +1,5 @@
-// Backend API base URL
 const API_BASE = 'http://localhost:3001/api'
 
-// Fetch quizzes from backend
 export async function loadQuizzes(){
   try{
     const res = await fetch(`${API_BASE}/quizzes`)
@@ -13,7 +11,6 @@ export async function loadQuizzes(){
   }
 }
 
-// Save a new quiz to backend
 export async function saveQuiz(quiz){
   try{
     const res = await fetch(`${API_BASE}/quizzes`, {
@@ -29,7 +26,6 @@ export async function saveQuiz(quiz){
   }
 }
 
-// Delete quiz by id from backend
 export async function deleteQuiz(id){
   try{
     const res = await fetch(`${API_BASE}/quizzes/${id}`, {
@@ -43,7 +39,6 @@ export async function deleteQuiz(id){
   }
 }
 
-// Fetch results from backend
 export async function loadResults(){
   try{
     const res = await fetch(`${API_BASE}/results`)
@@ -55,7 +50,6 @@ export async function loadResults(){
   }
 }
 
-// Save a new result to backend
 export async function saveResult(result){
   try{
     const res = await fetch(`${API_BASE}/results`, {

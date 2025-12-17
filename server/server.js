@@ -8,18 +8,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express()
 const PORT = 3001
 
-// Middleware
 app.use(cors())
 app.use(express.json())
 
-// Data files
 const QUIZZES_FILE = path.join(__dirname, 'data', 'quizzes.json')
 const RESULTS_FILE = path.join(__dirname, 'data', 'results.json')
 
-// Ensure data directory exists
 await fs.mkdir(path.join(__dirname, 'data'), { recursive: true })
 
-// Helper to read JSON file
 async function readJSON(file) {
   try {
     const data = await fs.readFile(file, 'utf-8')
@@ -30,12 +26,10 @@ async function readJSON(file) {
   }
 }
 
-// Helper to write JSON file
 async function writeJSON(file, data) {
   await fs.writeFile(file, JSON.stringify(data, null, 2), 'utf-8')
 }
 
-// Routes for quizzes
 app.get('/api/quizzes', async (req, res) => {
   try {
     const quizzes = await readJSON(QUIZZES_FILE)
@@ -68,7 +62,6 @@ app.delete('/api/quizzes/:id', async (req, res) => {
   }
 })
 
-// Routes for results
 app.get('/api/results', async (req, res) => {
   try {
     const results = await readJSON(RESULTS_FILE)

@@ -67,7 +67,7 @@ export default function Play(){
         <div className="small">{idx+1} / {quiz.questions.length}</div>
       </div>
 
-      <div style={{marginTop:8}}>
+      <div className="mt-8">
         <button id="prev" className="btn" onClick={prev} disabled={idx===0}>Prev</button>
         <button id="next" className="btn" onClick={next} disabled={idx===quiz.questions.length-1}>Next</button>
         <button id="finish" className="btn" onClick={finishQuiz}>Finish</button>

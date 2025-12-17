@@ -70,7 +70,6 @@ export default function Quizzes(){
     const newQuiz = { id: genId('quiz'), title: t, desc: d, questions: qs }
     try{
       await saveQuiz(newQuiz)
-      // reset
       setTitle('')
       setDesc('')
       setQuestions([ makeEmptyQuestion(), makeEmptyQuestion() ])
@@ -90,7 +89,7 @@ export default function Quizzes(){
             <div className="card" key={q.id}>
               <h3>{q.title}</h3>
               <p className="small">{q.desc || ''}</p>
-              <div style={{marginTop:8}}>
+              <div className="mt-8">
                 <button className="btn" onClick={()=>startQuiz(q.id)}>Play</button>
                 <button className="btn" onClick={()=>deleteQuizConfirm(q.id)}>Delete</button>
               </div>
@@ -99,7 +98,7 @@ export default function Quizzes(){
         </div>
       </section>
 
-      <section className="panel panel-aside" style={{marginTop:20}}>
+      <section className="panel panel-aside mt-20">
         <h2>Create new quiz</h2>
         <form id="create-form" className="form" onSubmit={handleSubmit}>
           <div>

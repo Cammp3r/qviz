@@ -20,7 +20,7 @@ export default function Results(){
             <div className="card" key={r.id}>
               <h3>{r.quizTitle} — {r.score}/{r.total}</h3>
               <p className="small">{new Date(r.date).toLocaleString()}</p>
-              <div style={{marginTop:8}}><button className="btn" onClick={()=>navigate(`/play/${r.quizId}`)}>Play again</button></div>
+              <div className="mt-8"><button className="btn" onClick={()=>navigate(`/play/${r.quizId}`)}>Play again</button></div>
             </div>
           ))}
         </div>

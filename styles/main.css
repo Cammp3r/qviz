@@ -166,3 +166,20 @@ body{
   font-size:13px;
   color:var(--muted);
 }
+
+/* Utility classes for spacing */
+.mt-8{
+  margin-top:8px;
+}
+.mt-20{
+  margin-top:20px;
+}
+.ml-12{
+  margin-left:12px;
+}
+
+/* Link styles */
+.link-plain{
+  text-decoration:none;
+  color:inherit;
+}
