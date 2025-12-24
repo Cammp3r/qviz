@@ -67,7 +67,13 @@ export default function Quizzes(){
       if(!qtext || opts.some(o=>!o)) return
       qs.push({ text: qtext, options: opts, correct })
     })
-    const newQuiz = { id: genId('quiz'), title: t, desc: d, questions: qs }
+    
+    const newQuiz = { id: genId('quiz'),
+      title: t,
+      desc: d,
+      questions: qs  
+}
+
     try{
       await saveQuiz(newQuiz)
       setTitle('')
