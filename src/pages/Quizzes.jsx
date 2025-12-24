@@ -63,7 +63,7 @@ export default function Quizzes(){
     questions.forEach(q=>{
       const qtext = (q.text||'').trim()
       const opts = q.options.map(o=> (o||'').trim())
-      const correct = Number.isFinite(Number(q.correct)) ? parseInt(q.correct||'0',10) : 0
+      const correct = Number(q.correct) || 0
       if(!qtext || opts.some(o=>!o)) return
       qs.push({ text: qtext, options: opts, correct })
     })
